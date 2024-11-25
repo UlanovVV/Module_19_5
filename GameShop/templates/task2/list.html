@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Posts</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+    <h1>My Posts</h1>
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1&items_per_page={{ page_obj.paginator.per_page }}">&laquo; First</a>
+            <a href="?page={{ page_obj.previous_page_number }}&items_per_page={{ page_obj.paginator.per_page }}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+                <a class="active">{{ num }}</a>
+            {% else %}
+                <a href="?page={{ num }}&items_per_page={{ page_obj.paginator.per_page }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&items_per_page={{ page_obj.paginator.per_page }}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}&items_per_page={{ page_obj.paginator.per_page }}">Last &raquo;</a>
+        {% endif %}
+    </div>
+    <br>
+    <form method="GET" action="">
+        <label for="items_per_page">Items per page:</label>
+        <select name="items_per_page" id="items_per_page" onchange="this.form.submit()">
+            <option value="5" {% if page_obj.paginator.per_page == 5 %}selected{% endif %}>5</option>
+            <option value="10" {% if page_obj.paginator.per_page == 10 %}selected{% endif %}>10</option>
+            <option value="15" {% if page_obj.paginator.per_page == 15 %}selected{% endif %}>15</option>
+        </select>
+        <input type="hidden" name="page" value="{{ page_obj.number }}">
+    </form>
+
+    <ul>
+        {% for post in page_obj %}
+            <li>
+                <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+                <p>Автор: {{ post.author }}</p>
+                <p>{{ post.content|truncatewords:30 }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+    <br>
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1&items_per_page={{ page_obj.paginator.per_page }}">&laquo; First</a>
+            <a href="?page={{ page_obj.previous_page_number }}&items_per_page={{ page_obj.paginator.per_page }}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+                <a class="active">{{ num }}</a>
+            {% else %}
+                <a href="?page={{ num }}&items_per_page={{ page_obj.paginator.per_page }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&items_per_page={{ page_obj.paginator.per_page }}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}&items_per_page={{ page_obj.paginator.per_page }}">Last &raquo;</a>
+        {% endif %}
+    </div>
+</body>
+</html>
